@@ -1,0 +1,47 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+	id "com.github.johnrengelman.shadow" version "6.0.0"
+	id "java"
+}
+
+group = "io.alerium.supportercodes"
+version = "0.0.1-Alpha"
+
+repositories {
+	mavenCentral()
+	
+	maven { url = "https://repo.destroystokyo.com/repository/maven-public/" }
+	maven { url = "https://oss.sonatype.org/content/groups/public/" }
+	maven { url = "https://mvnrepository.com/artifact/com.zaxxer/HikariCP" }
+	maven { url = "http://repo.extendedclip.com/content/repositories/placeholderapi/" }
+}
+
+dependencies {
+	implementation "me.mattstudios.utils:matt-framework:1.4"
+	implementation "me.mattstudios.utils:matt-framework-gui:2.0.2"
+
+    implementation "com.zaxxer:HikariCP:3.4.5"
+
+	compileOnly "me.clip:placeholderapi:2.10.9"
+	compileOnly "org.github.paperspigot:paperspigot-api:1.8.8-R0.1-SNAPSHOT"
+}
+
+def library = "${group}.libs"
+
+shadowJar {
+	relocate "me.mattstudios.mf", "${library}.mf-utils"
+
+	archiveFileName.set("SupporterCodes-${version}.jar")
+}
+
+processResources {
+	from(sourceSets.main.resources.srcDirs) {
+		filter ReplaceTokens, tokens: [version: version]
+	}
+}
+
+def javaVersion = JavaVersion.VERSION_1_8
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion

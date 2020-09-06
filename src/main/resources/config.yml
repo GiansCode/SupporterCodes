@@ -1,0 +1,43 @@
+messages:
+  how-to-support: ['wikihow/how-to-support-a-creator']
+  current-supported-creator: ['You are supporting {creator-name}']
+  invalid-creator: ['The specified creator does not exist!']
+  started-supporting-a-creator: ['You are now supporting {creator-name}']
+  invalid-force-player: ['Invalid force player']
+  invalid-force-supporter: ['Specified supporter does not exist!']
+  not-supporting-a-creator: ['You are not supporting any creators!']
+  no-longer-supporting-a-creator: ['You are no longer supporting {creator-name}']
+  max-creators-supported: ['You are already supporting a creator!']
+  reloaded-plugin: ['Successfully reloaded the plugin in {time}ms.']
+  non-console-command: ['This command can not be executed in console!']
+  no-command-permission: ['You do not have permission to execute this command.']
+  non-existent-command: ['Entered command does not exist!']
+  wrong-command-usage: ['Wrong command usage.']
+
+database:
+  updateDelay: 600 # (Time in Seconds)
+
+creators:
+  - 'a1b72b20-97e0-476e-8a78-db9c9dcf93a4;Frcsty'
+
+creator-menu:
+  page-rows: 3
+  page-size: 14
+  page-title: '&8> Support Creators'
+  creator-display:
+    material: STEVE_HEAD
+    data: 3
+    display: '&b&lCreator&8: &f{creator-name}'
+    lore:
+      - ''
+      - '&7&o"If you wish to support this creator,'
+      - '&7&oclick on their head"'
+      - ''
+      - ' &f{creator-name} &7has &f%creatorcodes_supporters_{creator-name}% &7supporters.'
+      - ''
+
+# Placeholders:
+# Current Supporter: %supportercodes_currently_supporting%
+# Supporting Since: %supportercodes_supporting_since%
+#
+# Creator Supporters: %supportercodes_creator_supporters_monthly/all_<name>%
