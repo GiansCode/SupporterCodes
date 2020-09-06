@@ -8,10 +8,10 @@ import java.util.UUID;
 public final class Creator {
 
     private final UUID uuid;
-    private long supporters;
-    private long supportCodeUses;
+    private Long supporters = null;
+    private Long supportCodeUses = null;
 
-    public Creator(final UUID uuid, final long supporters, final long supportCodeUses) {
+    public Creator(final UUID uuid, final Long supporters, final Long supportCodeUses) {
         this.uuid = uuid;
         this.supporters = supporters;
         this.supportCodeUses = supportCodeUses;
@@ -33,11 +33,11 @@ public final class Creator {
         this.supportCodeUses += 1;
     }
 
-    public long getSupporters() {
+    public Long getSupporters() {
         return this.supporters;
     }
 
-    public long getSupportCodeUses() {
+    public Long getSupportCodeUses() {
         return this.supportCodeUses;
     }
 }

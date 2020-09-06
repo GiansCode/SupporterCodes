@@ -5,6 +5,7 @@ import io.alerium.supportercodes.object.Supporter;
 import io.alerium.supportercodes.storage.InformationStorage;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,18 +46,24 @@ final class Placeholders extends PlaceholderExpansion {
         final Supporter supporter = storage.getSupporter(player.getUniqueId());
 
         if (supporter == null) {
-            final Creator creator = storage.getCreator(player.getUniqueId());
-
-            switch (params) {
-                case "creator_supporters_monthly":
-                    return String.valueOf(getMonthlySupporters(storage));
-                case "creator_supporters_all":
-                    return String.valueOf(creator.getSupporters());
+            final String[] infoArray = params.split("_");
+            final OfflinePlayer creatorPlayer = Bukkit.getOfflinePlayer(infoArray[3]);
+            if (creatorPlayer == null) {
+                System.out.println("Null Creator " + infoArray[3]);
+                return null;
             }
-            return null;
+
+            final Creator creator = storage.getCreator(creatorPlayer.getUniqueId());
+            if (params.contains("creator_supporters_monthly")) {
+                return String.valueOf(getMonthlySupporters(storage));
+            } else if (params.contains("creator_supporters_all")) {
+                return String.valueOf(creator.getSupporters());
+            } else {
+                return null;
+            }
         }
 
-        final Player supportedCreator = Bukkit.getPlayer(supporter.getSupporting());
+        final OfflinePlayer supportedCreator = Bukkit.getOfflinePlayer(supporter.getSupporting());
         switch (params) {
             case "currently_supporting":
                 return supportedCreator == null ? "None" : supportedCreator.getName();

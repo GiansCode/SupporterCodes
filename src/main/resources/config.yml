@@ -1,12 +1,12 @@
 messages:
   how-to-support: ['wikihow/how-to-support-a-creator']
-  current-supported-creator: ['You are supporting {creator-name}']
+  current-supported-creator: ['You are supporting %supportercodes_currently_supporting%']
   invalid-creator: ['The specified creator does not exist!']
-  started-supporting-a-creator: ['You are now supporting {creator-name}']
+  started-supporting-a-creator: ['You are now supporting %supportercodes_currently_supporting%']
   invalid-force-player: ['Invalid force player']
   invalid-force-supporter: ['Specified supporter does not exist!']
   not-supporting-a-creator: ['You are not supporting any creators!']
-  no-longer-supporting-a-creator: ['You are no longer supporting {creator-name}']
+  no-longer-supporting-a-creator: ['You are no longer supporting %supportercodes_currently_supporting%']
   max-creators-supported: ['You are already supporting a creator!']
   reloaded-plugin: ['Successfully reloaded the plugin in {time}ms.']
   non-console-command: ['This command can not be executed in console!']
@@ -25,16 +25,26 @@ creator-menu:
   page-size: 14
   page-title: '&8> Support Creators'
   creator-display:
-    material: STEVE_HEAD
+    material: SKULL_ITEM
     data: 3
+    amount: 1
     display: '&b&lCreator&8: &f{creator-name}'
     lore:
       - ''
       - '&7&o"If you wish to support this creator,'
       - '&7&oclick on their head"'
       - ''
-      - ' &f{creator-name} &7has &f%creatorcodes_supporters_{creator-name}% &7supporters.'
+      - ' &f{creator-name} &7has &f%supportercodes_supporters_all_{creator-name}% &7supporters.'
       - ''
+  items:
+    filler:
+      material: STAINED_GLASS_PANE
+      data: 7
+      amount: 1
+      display: ' '
+      lore: []
+      slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+
 
 # Placeholders:
 # Current Supporter: %supportercodes_currently_supporting%

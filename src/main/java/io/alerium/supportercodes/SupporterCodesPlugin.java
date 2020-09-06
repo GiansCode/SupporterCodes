@@ -3,7 +3,6 @@ package io.alerium.supportercodes;
 import io.alerium.supportercodes.database.Connection;
 import io.alerium.supportercodes.database.InformationHandler;
 import io.alerium.supportercodes.database.SetupDatabase;
-import io.alerium.supportercodes.factory.MenuFactory;
 import io.alerium.supportercodes.listener.PlayerJoinListener;
 import io.alerium.supportercodes.storage.InformationStorage;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +15,6 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     private final InformationHandler informationHandler = new InformationHandler(this);
 
     private final InformationStorage informationStorage = new InformationStorage();
-    private final MenuFactory menuFactory = new MenuFactory();
     private Connection connection;
 
     @Override
@@ -29,12 +27,11 @@ public final class SupporterCodesPlugin extends JavaPlugin {
 
         new SetupDatabase(this);
         commandHandler.setup();
-        menuFactory.updateMenu(this);
 
-        new Placeholders(this).register();
         informationHandler.startUpdater();
 
         getServer().getPluginManager().registerEvents(joinListener, this);
+        new Placeholders(this).register();
     }
 
     @Override
@@ -48,14 +45,6 @@ public final class SupporterCodesPlugin extends JavaPlugin {
         return this.informationStorage;
     }
 
-    public MenuFactory getMenuFactory() {
-        return this.menuFactory;
-    }
-
-    public void updateMenuFactory() {
-        this.menuFactory.updateMenu(this);
-    }
-
     public Connection getDatabaseConnection() {
         return this.connection;
     }
@@ -64,4 +53,5 @@ public final class SupporterCodesPlugin extends JavaPlugin {
         return this.commandHandler;
     }
 
+    public InformationHandler getInformationHandler() { return this.informationHandler; }
 }

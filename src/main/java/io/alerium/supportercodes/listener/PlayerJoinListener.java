@@ -21,10 +21,11 @@ public final class PlayerJoinListener implements Listener {
         final InformationStorage storage = plugin.getInformationStorage();
         final Player player = event.getPlayer();
 
-        if (!player.hasPlayedBefore() && storage.getSupporter(player.getUniqueId()) == null) {
+        if (storage.getSupporter(player.getUniqueId()) == null) {
             final Supporter supporter = new Supporter(player.getUniqueId());
 
             storage.setSupporter(player.getUniqueId(), supporter);
+            plugin.getInformationHandler().setSupporter(supporter);
         }
     }
 

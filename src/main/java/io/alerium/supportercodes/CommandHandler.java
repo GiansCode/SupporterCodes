@@ -1,10 +1,7 @@
 package io.alerium.supportercodes;
 
 import io.alerium.supportercodes.command.PluginCommand;
-import io.alerium.supportercodes.command.sub.PluginReload;
-import io.alerium.supportercodes.command.sub.SupporterClear;
-import io.alerium.supportercodes.command.sub.SupporterHandle;
-import io.alerium.supportercodes.command.sub.SupporterList;
+import io.alerium.supportercodes.command.sub.*;
 import io.alerium.supportercodes.util.Color;
 import me.mattstudios.mf.base.CommandManager;
 import me.mattstudios.mf.base.MessageHandler;
@@ -27,7 +24,9 @@ public final class CommandHandler {
                 new SupporterClear(plugin),
                 new SupporterHandle(plugin),
                 new SupporterList(plugin),
-                new PluginCommand(plugin)
+                new PluginCommand(plugin),
+
+                new DBInfo(plugin)
         );
 
         setMessages();

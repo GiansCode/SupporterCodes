@@ -4,12 +4,10 @@ import io.alerium.supportercodes.SupporterCodesPlugin;
 import io.alerium.supportercodes.object.Supporter;
 import io.alerium.supportercodes.storage.InformationStorage;
 import io.alerium.supportercodes.util.Color;
-import io.alerium.supportercodes.util.Replace;
 import me.mattstudios.mf.annotations.Command;
 import me.mattstudios.mf.annotations.Permission;
 import me.mattstudios.mf.annotations.SubCommand;
 import me.mattstudios.mf.base.CommandBase;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -42,15 +40,14 @@ public final class SupporterClear extends CommandBase {
             return;
         }
 
-        final Player supporting = Bukkit.getPlayer(supporter.getSupporting());
+        Color.colorize(
+                messages.getStringList("no-longer-supporting-a-creator"),
+                player
+        ).forEach(player::sendMessage);
         supporter.setSupporting(null);
         supporter.setSupporterSince(null);
 
         storage.setSupporter(supporter.getId(), supporter);
-        Color.colorize(Replace.replaceList(
-                messages.getStringList("no-longer-supporting-a-creator"),
-                "{creator-name}", supporting.getName()
-        ), player).forEach(player::sendMessage);
     }
 
     @SubCommand(ALT_SUB_COMMAND)

@@ -1,3 +1,4 @@
 name: SupporterCodes
 version: @version@
 main: io.alerium.supportercodes.SupporterCodesPlugin
+depend: [PlaceholderAPI]

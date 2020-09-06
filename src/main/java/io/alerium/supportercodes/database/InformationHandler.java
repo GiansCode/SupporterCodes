@@ -12,15 +12,18 @@ import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class InformationHandler {
 
     private final SupporterCodesPlugin plugin;
+    private final Logger logger;
     private String databaseName;
     private long updateDelay;
 
     public InformationHandler(final SupporterCodesPlugin plugin) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
     }
 
     public void initialize() {
@@ -33,16 +36,16 @@ public final class InformationHandler {
         return plugin.getDatabaseConnection().getConnection();
     }
 
-    private void setCreator(final Connection connection, final Creator creator) {
+    private void updateCreator(final Connection connection, final Creator creator) {
         try {
             connection.prepareStatement(
                     String.format(
-                            "INSERT INTO %s.creators (uuid, supporters, support_code_uses) VALUES ('%s', %d, %d);",
-                            databaseName, creator.getId(), creator.getSupporters(), creator.getSupportCodeUses()
-                    )
+                            "UPDATE %s.creators SET supporters=%d, support_code_uses=%d WHERE uuid='%s';",
+                            databaseName, creator.getSupporters(), creator.getSupportCodeUses(), creator.getId()
+                            )
             ).executeUpdate();
         } catch (final SQLException ex) {
-            ex.printStackTrace();
+            logger.log(Level.WARNING, "An exception occurred while saving Creator '" + creator.getId() + "'", ex);
         }
     }
 
@@ -55,36 +58,53 @@ public final class InformationHandler {
                     )
             ).executeUpdate();
         } catch (final SQLException ex) {
-            ex.printStackTrace();
+            logger.log(Level.WARNING, "An exception occurred while removing Creator '" + uuid + "'", ex);
         }
     }
 
-    private void setSupporter(final Connection connection, final Supporter supporter) {
-        final Creator supportedCreator = plugin.getInformationStorage().getCreator(supporter.getSupporting());
+    public void setSupporter(final Supporter supporter) {
+        final Connection connection = plugin.getDatabaseConnection().getConnection();
+        if (connection == null) {
+            logger.log(Level.WARNING, "Database connection was null while trying to set Supporter '" + supporter.getId() + "'");
+            return;
+        }
 
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                connection.prepareStatement(
+                        String.format(
+                                "INSERT INTO %s.supporters (uuid) VALUES ('%s');",
+                                databaseName, supporter.getId()
+                        )
+                ).executeUpdate();
+            } catch (final SQLException ex) {
+                logger.log(Level.WARNING, "An exception occurred while setting Supporter '" + supporter.getId() + "'", ex);
+            }
+            return null;
+        }).exceptionally(ex -> {
+            logger.log(Level.WARNING, "An exception occurred while setting Supporter '" + supporter.getId() + "'", ex);
+            return null;
+        });
+    }
+
+    private void updateSupporter(final Connection connection, final Supporter supporter) {
+        final Creator supportedCreator = plugin.getInformationStorage().getCreator(UUID.fromString(supporter.getSupporting()));
         try {
             connection.prepareStatement(
                     String.format(
-                            "INSERT INTO %s.supporters (uuid, supported_creator, supporter_since) VALUES ('%s', '%s', %d);",
-                            databaseName, supporter.getId(), supportedCreator.getId(), supporter.getSupportingSince()
-                    )
-            ).executeUpdate();
-
-            connection.prepareStatement(
-                    String.format(
                             "UPDATE %s.supporters SET supported_creator='%s', supporter_since=%d WHERE uuid='%s';",
-                            databaseName, supportedCreator.getId(), supporter.getSupportingSince(), supporter.getId()
+                            databaseName, supportedCreator == null ? null : supportedCreator.getId(), supporter.getSupportingSince(), supporter.getId()
                     )
             ).executeUpdate();
 
             connection.prepareStatement(
                     String.format(
                             "UPDATE %s.creators SET supporters=%d WHERE uuid='%s';",
-                            databaseName, supportedCreator.getSupporters(), supportedCreator.getId()
+                            databaseName, supportedCreator == null ? null : supportedCreator.getSupporters(), supportedCreator == null ? null : supportedCreator.getId()
                     )
             ).executeUpdate();
         } catch (final SQLException ex) {
-            ex.printStackTrace();
+            logger.log(Level.WARNING, "An exception occurred while updating Supporter '" + supporter.getId() + "'", ex);
         }
     }
 
@@ -99,25 +119,27 @@ public final class InformationHandler {
 
     public void save() {
         CompletableFuture.supplyAsync(() -> {
-            final Connection connection = openConnection();
-
-            final InformationStorage storage = plugin.getInformationStorage();
-            final Iterator<UUID> removalIterator = storage.getRemoval().iterator();
-            while (removalIterator.hasNext()) {
-                final UUID removable = removalIterator.next();
-
-                removeCreator(connection, removable);
-            }
-
-            for (final UUID uuid : storage.getCreators().keySet()) {
-                setCreator(connection, storage.getCreator(uuid));
-            }
-
-            for (final UUID uuid : storage.getSupporters().keySet()) {
-                setSupporter(connection, storage.getSupporter(uuid));
-            }
-
             try {
+                final Connection connection = openConnection();
+
+                final InformationStorage storage = plugin.getInformationStorage();
+                final Iterator<UUID> removalIterator = storage.getRemoval().iterator();
+                while (removalIterator.hasNext()) {
+                    final UUID removable = removalIterator.next();
+
+                    removeCreator(connection, removable);
+                }
+
+                storage.getRemoval().clear();
+
+                for (final UUID uuid : storage.getCreators().keySet()) {
+                    updateCreator(connection, storage.getCreator(uuid));
+                }
+
+                for (final UUID uuid : storage.getSupporters().keySet()) {
+                    updateSupporter(connection, storage.getSupporter(uuid));
+                }
+
                 connection.close();
             } catch (final SQLException ex) {
                 ex.printStackTrace();

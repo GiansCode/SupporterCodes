@@ -63,7 +63,7 @@ public final class PluginCommand extends CommandBase {
                     return;
                 }
 
-                supporter.setSupporting(creator.getId());
+                supporter.setSupporting(creator.getId().toString());
                 creator.incrementSupporters();
 
                 storage.setSupporter(player.getUniqueId(), supporter);
@@ -112,7 +112,7 @@ public final class PluginCommand extends CommandBase {
                 return;
             }
 
-            forceSupporter.setSupporting(creator.getId());
+            forceSupporter.setSupporting(creator.getId().toString());
             creator.incrementSupporters();
 
             storage.setSupporter(forceSupporter.getId(), forceSupporter);

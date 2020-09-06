@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 @Command("support")
 public final class SupporterHandle extends CommandBase {
 
@@ -31,7 +33,10 @@ public final class SupporterHandle extends CommandBase {
         final Player player = Bukkit.getPlayer(target);
         final Supporter supporter = storage.getSupporter(player.getUniqueId());
 
-        final Creator creator = storage.getCreator(supporter.getSupporting());
+        if (supporter.getSupporting() == null) {
+            return;
+        }
+        final Creator creator = storage.getCreator(UUID.fromString(supporter.getSupporting()));
 
         creator.incrementCodeUses();
         storage.setCreator(creator.getId(), creator);

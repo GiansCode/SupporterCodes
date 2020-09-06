@@ -26,7 +26,7 @@ public final class Connection extends DatabaseFactory {
         }
     }
 
-    String getDatabaseName() {
+    public String getDatabaseName() {
         final Properties properties = readPropertiesFile(plugin.getDataFolder() + "/hikari.properties");
         return properties.getProperty("dataSource.databaseName");
     }

@@ -27,13 +27,12 @@ import java.util.logging.Level;
 public final class MenuFactory {
 
     private PaginatedGui menu;
-    private Player player;
 
-    public void updateMenu(final SupporterCodesPlugin plugin) {
-        this.menu = createMenu(plugin);
+    public void updateMenu(final SupporterCodesPlugin plugin, final Player player) {
+        this.menu = createMenu(plugin, player);
     }
 
-    private PaginatedGui createMenu(final SupporterCodesPlugin plugin) {
+    private PaginatedGui createMenu(final SupporterCodesPlugin plugin, final Player player) {
         final FileConfiguration config = plugin.getConfig();
         final ConfigurationSection messages = config.getConfigurationSection("messages");
         final InformationStorage storage = plugin.getInformationStorage();
@@ -59,7 +58,7 @@ public final class MenuFactory {
 
         final String materialString = creatorMenuSection.getString("material");
         final Material material = Material.getMaterial(materialString == null ? "STONE" : materialString);
-        final ItemStack baseItem = new ItemStack(material, 1, (short) creatorMenuSection.getInt("data"));
+        final ItemStack baseItem = new ItemStack(material, creatorMenuSection.getInt("amount"), (short) creatorMenuSection.getInt("data"));
         final Supporter supporter = storage.getSupporter(player.getUniqueId());
 
         final String displayName = creatorMenuSection.getString("display");
@@ -79,6 +78,7 @@ public final class MenuFactory {
             final ItemMeta meta = item.getItemMeta();
             if (meta != null) {
                 final String creatorName = creator.getPlayer().getName();
+                System.out.println(creatorName);
 
                 meta.setDisplayName(Color.colorize(Replace.replaceString(
                         displayName,
@@ -90,7 +90,7 @@ public final class MenuFactory {
                         "{creator-name}", creatorName
                 ), player));
 
-                if (supporter != null && supporter.getSupporting().equals(creatorUUID)) {
+                if (supporter != null && supporter.getSupporting() != null && supporter.getSupporting().equals(creatorUUID)) {
                     meta.addEnchant(Enchantment.DURABILITY, 0, false);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
@@ -114,7 +114,7 @@ public final class MenuFactory {
                 }
 
                 gui.close(player);
-                supporter.setSupporting(creator.getId());
+                supporter.setSupporting(creator.getId().toString());
                 storage.setSupporter(player.getUniqueId(), supporter);
                 Color.colorize(
                         messages.getStringList("started-supporting-a-creator"),
@@ -125,14 +125,42 @@ public final class MenuFactory {
             }));
         }
 
+        final ConfigurationSection itemSection = menuSection.getConfigurationSection("items");
+        for (final String fillerItem : itemSection.getKeys(false)) {
+            final ConfigurationSection fillerItemSection = itemSection.getConfigurationSection(fillerItem);
+
+            final ItemStack item = new ItemStack(
+                    Material.getMaterial(fillerItemSection.getString("material")),
+                    fillerItemSection.getInt("amount"),
+                    (short) fillerItemSection.getInt("data")
+            );
+
+            final ItemMeta meta = item.getItemMeta();
+
+            if (meta != null) {
+                meta.setDisplayName(Color.colorize(
+                        fillerItemSection.getString("display"),
+                        player
+                ));
+
+                meta.setLore(Color.colorize(
+                        fillerItemSection.getStringList("lore"),
+                        player
+                ));
+
+                item.setItemMeta(meta);
+            }
+
+            final GuiItem guiItem = new GuiItem(item);
+            for (final int slot : fillerItemSection.getIntegerList("slots")) {
+                gui.setItem(slot, guiItem);
+            }
+        }
+
         return gui;
     }
 
     public PaginatedGui getMenu() {
         return this.menu;
-    }
-
-    public void setCurrentPlayer(final Player player) {
-        this.player = player;
     }
 }

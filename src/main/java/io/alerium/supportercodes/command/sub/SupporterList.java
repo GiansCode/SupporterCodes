@@ -16,6 +16,7 @@ public final class SupporterList extends CommandBase {
 
     private static final String SUB_COMMAND = "list";
     private static final String PERMISSION = "supportercodes.command.stop";
+    private final MenuFactory factory = new MenuFactory();
     private final SupporterCodesPlugin plugin;
 
     public SupporterList(final SupporterCodesPlugin plugin) {
@@ -25,9 +26,7 @@ public final class SupporterList extends CommandBase {
     @SubCommand(SUB_COMMAND)
     @Permission(PERMISSION)
     public void onCommand(final Player player) {
-        final MenuFactory factory = plugin.getMenuFactory();
-
-        factory.setCurrentPlayer(player);
+        factory.updateMenu(plugin, player);
         final PaginatedGui menu = factory.getMenu();
 
         if (menu == null) {

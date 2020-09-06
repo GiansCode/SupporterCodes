@@ -30,7 +30,6 @@ public final class PluginReload extends CommandBase {
         plugin.reloadConfig();
 
         plugin.getCommandHandler().setMessages();
-        plugin.updateMenuFactory();
         final String estimatedTime = String.valueOf(System.currentTimeMillis() - start);
         Color.colorize(Replace.replaceList(
                 messages.getStringList("reloaded-plugin"),

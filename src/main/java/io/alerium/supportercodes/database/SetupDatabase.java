@@ -3,6 +3,7 @@ package io.alerium.supportercodes.database;
 import io.alerium.supportercodes.SupporterCodesPlugin;
 import io.alerium.supportercodes.object.Creator;
 import io.alerium.supportercodes.object.Supporter;
+import io.alerium.supportercodes.storage.InformationStorage;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -103,6 +104,7 @@ public final class SetupDatabase {
 
     private void loadCreators() {
         final Connection connection = openConnection();
+        final InformationStorage storage = plugin.getInformationStorage();
 
         try {
             final ResultSet resultSet = connection.prepareStatement(
@@ -115,20 +117,29 @@ public final class SetupDatabase {
             while (resultSet.next()) {
                 final UUID creatorUUID = UUID.fromString(resultSet.getString("uuid"));
                 if (!creators.contains(creatorUUID)) {
-                    plugin.getInformationStorage().getRemoval().add(creatorUUID);
+                    storage.getRemoval().add(creatorUUID);
                     continue;
                 }
 
-                final long supporters = resultSet.getLong("supporters");
-                final long supportCodeUses = resultSet.getLong("support_code_uses");
+                final Long supporters = resultSet.getLong("supporters");
+                final Long supportCodeUses = resultSet.getLong("support_code_uses");
 
                 final Creator creator = new Creator(creatorUUID, supporters, supportCodeUses);
-                plugin.getInformationStorage().setCreator(creatorUUID, creator);
+                storage.setCreator(creatorUUID, creator);
             }
 
             connection.close();
         } catch (final SQLException ex) {
             logger.log(Level.WARNING, "An exception occurred while loading creators!", ex);
+        }
+
+        for (final UUID creatorUUID : creators) {
+            if (storage.getCreator(creatorUUID) != null) {
+                continue;
+            }
+
+            final Creator creator = new Creator(creatorUUID, null, null);
+            storage.setCreator(creatorUUID, creator);
         }
     }
 
@@ -145,7 +156,7 @@ public final class SetupDatabase {
 
             while (resultSet.next()) {
                 final UUID supporterUUID = UUID.fromString(resultSet.getString("uuid"));
-                final UUID supportedCreatorUUID = UUID.fromString(resultSet.getString("supported_creator"));
+                final String supportedCreatorUUID = resultSet.getString("supported_creator");
                 final Long supporterSince = resultSet.getLong("supporter_since");
 
                 final Supporter supporter = new Supporter(supporterUUID);
