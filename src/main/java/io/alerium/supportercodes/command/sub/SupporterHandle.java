@@ -1,6 +1,7 @@
 package io.alerium.supportercodes.command.sub;
 
 import io.alerium.supportercodes.SupporterCodesPlugin;
+import io.alerium.supportercodes.listener.event.CreatorSupportEvent;
 import io.alerium.supportercodes.object.Creator;
 import io.alerium.supportercodes.object.Supporter;
 import io.alerium.supportercodes.storage.InformationStorage;
@@ -35,7 +36,7 @@ public final class SupporterHandle extends CommandBase {
         creator.incrementCodeUses();
         storage.setCreator(creator.getId(), creator);
 
-        // TODO: Call event
+        Bukkit.getServer().getPluginManager().callEvent(new CreatorSupportEvent());
     }
 
 }

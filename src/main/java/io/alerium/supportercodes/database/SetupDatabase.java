@@ -57,7 +57,10 @@ public final class SetupDatabase {
             -- -----------------------------------------------------
              */
             connection.prepareStatement(
-                    "CREATE DATABASE IF NOT EXISTS `" + databaseName + "`;"
+                    String.format(
+                            "CREATE DATABASE IF NOT EXISTS %s;",
+                            databaseName
+                    )
             ).executeUpdate();
 
             /*
@@ -66,12 +69,14 @@ public final class SetupDatabase {
             -- -----------------------------------------------------
              */
             connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS `" + databaseName + "`.`creators` ( "
-                            + "`uuid` VARCHAR(45) NOT NULL, "
-                            + "`supporters` LONG NULL, "
-                            + "`support_code_uses` LONG NULL, "
-                            + "PRIMARY KEY (`uuid`)) "
-                            + "ENGINE = InnoDB;"
+                    String.format(
+                            "CREATE TABLE IF NOT EXISTS %s.creators ( "
+                                    + "`uuid` VARCHAR(36) NOT NULL, "
+                                    + "`supporters` LONG NULL, "
+                                    + "`support_code_uses` LONG NULL, "
+                                    + "PRIMARY KEY (`uuid`));",
+                            databaseName
+                    )
             ).executeUpdate();
 
             /*
@@ -80,12 +85,14 @@ public final class SetupDatabase {
             -- -----------------------------------------------------
              */
             connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS `" + databaseName + "`.`supporters` ( "
-                            + "`uuid` VARCHAR(45) NOT NULL, "
-                            + "`supported_creator` VARCHAR(45) NULL, "
-                            + "`supporter_since` LONG NULL, "
-                            + "PRIMARY KEY (`uuid`)) "
-                            + "ENGINE = InnoDB;"
+                    String.format(
+                            "CREATE TABLE IF NOT EXISTS %s.supporters ( "
+                                    + "`uuid` VARCHAR(36) NOT NULL, "
+                                    + "`supported_creator` VARCHAR(36) NULL, "
+                                    + "`supporter_since` LONG NULL, "
+                                    + "PRIMARY KEY (`uuid`));",
+                            databaseName
+                    )
             ).executeUpdate();
 
             connection.close();
@@ -99,7 +106,10 @@ public final class SetupDatabase {
 
         try {
             final ResultSet resultSet = connection.prepareStatement(
-                    "SELECT * FROM creators"
+                    String.format(
+                            "SELECT * FROM %s.creators;",
+                            databaseName
+                    )
             ).executeQuery();
 
             while (resultSet.next()) {
@@ -127,7 +137,10 @@ public final class SetupDatabase {
 
         try {
             final ResultSet resultSet = connection.prepareStatement(
-                    "SELECT * FROM supporters"
+                    String.format(
+                            "SELECT * FROM %s.supporters;",
+                            databaseName
+                    )
             ).executeQuery();
 
             while (resultSet.next()) {

@@ -1,6 +1,7 @@
 package io.alerium.supportercodes.factory;
 
 import io.alerium.supportercodes.SupporterCodesPlugin;
+import io.alerium.supportercodes.listener.event.PlayerSupportCreatorEvent;
 import io.alerium.supportercodes.object.Creator;
 import io.alerium.supportercodes.object.Supporter;
 import io.alerium.supportercodes.storage.InformationStorage;
@@ -8,6 +9,7 @@ import io.alerium.supportercodes.util.Color;
 import io.alerium.supportercodes.util.Replace;
 import me.mattstudios.mfgui.gui.guis.GuiItem;
 import me.mattstudios.mfgui.gui.guis.PaginatedGui;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -118,6 +120,8 @@ public final class MenuFactory {
                         messages.getStringList("started-supporting-a-creator"),
                         player
                 ).forEach(player::sendMessage);
+
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerSupportCreatorEvent());
             }));
         }
 

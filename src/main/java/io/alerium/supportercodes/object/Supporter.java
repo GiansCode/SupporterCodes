@@ -1,6 +1,5 @@
 package io.alerium.supportercodes.object;
 
-import java.util.Date;
 import java.util.UUID;
 
 public final class Supporter {
@@ -26,8 +25,8 @@ public final class Supporter {
         this.supporting = creatorUUID;
     }
 
-    public Date getSupportingSince() {
-        return new Date(this.supportSince);
+    public long getSupportingSince() {
+        return this.supportSince;
     }
 
     public UUID getId() {

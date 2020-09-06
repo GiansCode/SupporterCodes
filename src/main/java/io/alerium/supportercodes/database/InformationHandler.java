@@ -36,11 +36,10 @@ public final class InformationHandler {
     private void setCreator(final Connection connection, final Creator creator) {
         try {
             connection.prepareStatement(
-                    "INSERT INTO `" + databaseName + "`.`creators` (uuid, supporters, support_code_uses) VALUES ("
-                            + creator.getId() + ", "
-                            + creator.getSupporters() + ", "
-                            + creator.getSupportCodeUses()
-                            + ");"
+                    String.format(
+                            "INSERT INTO %s.creators (uuid, supporters, support_code_uses) VALUES ('%s', %d, %d);",
+                            databaseName, creator.getId(), creator.getSupporters(), creator.getSupportCodeUses()
+                    )
             ).executeUpdate();
         } catch (final SQLException ex) {
             ex.printStackTrace();
@@ -50,7 +49,10 @@ public final class InformationHandler {
     private void removeCreator(final Connection connection, final UUID uuid) {
         try {
             connection.prepareStatement(
-                    "DELETE FROM `" + databaseName + "`.`creators` WHERE uuid='" + uuid + "';"
+                    String.format(
+                            "DELETE FROM %s.creators WHERE uuid='%s';",
+                            databaseName, uuid
+                    )
             ).executeUpdate();
         } catch (final SQLException ex) {
             ex.printStackTrace();
@@ -62,25 +64,24 @@ public final class InformationHandler {
 
         try {
             connection.prepareStatement(
-                    "INSERT INTO `" + databaseName + "`.`supporters` (uuid, supported_creator, supporter_since) VALUES (" +
-                            supporter.getId() + ", "
-                            + supportedCreator.getId() + ", "
-                            + supporter.getSupportingSince().toString()
-                            + ");"
+                    String.format(
+                            "INSERT INTO %s.supporters (uuid, supported_creator, supporter_since) VALUES ('%s', '%s', %d);",
+                            databaseName, supporter.getId(), supportedCreator.getId(), supporter.getSupportingSince()
+                    )
             ).executeUpdate();
 
             connection.prepareStatement(
-                    "UPDATE `" + databaseName + "`.`supporters` SET " +
-                            "supported_creator=" + supportedCreator.getId() + ", " +
-                            "supporter_since=" + supporter.getSupportingSince().toString() +
-                            "WHERE uuid=" + supporter.getId() + ";"
+                    String.format(
+                            "UPDATE %s.supporters SET supported_creator='%s', supporter_since=%d WHERE uuid='%s';",
+                            databaseName, supportedCreator.getId(), supporter.getSupportingSince(), supporter.getId()
+                    )
             ).executeUpdate();
 
             connection.prepareStatement(
-                    "UPDATE `" + databaseName + "`.`creators` SET supporters="
-                            + supportedCreator.getSupporters()
-                            + " WHERE uuid=" + supportedCreator.getId()
-                            + ");"
+                    String.format(
+                            "UPDATE %s.creators SET supporters=%d WHERE uuid='%s';",
+                            databaseName, supportedCreator.getSupporters(), supportedCreator.getId()
+                    )
             ).executeUpdate();
         } catch (final SQLException ex) {
             ex.printStackTrace();

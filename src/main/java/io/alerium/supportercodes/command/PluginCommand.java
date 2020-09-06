@@ -1,6 +1,7 @@
 package io.alerium.supportercodes.command;
 
 import io.alerium.supportercodes.SupporterCodesPlugin;
+import io.alerium.supportercodes.listener.event.PlayerSupportCreatorEvent;
 import io.alerium.supportercodes.object.Creator;
 import io.alerium.supportercodes.object.Supporter;
 import io.alerium.supportercodes.storage.InformationStorage;
@@ -72,6 +73,8 @@ public final class PluginCommand extends CommandBase {
                         messages.getStringList("started-supporting-a-creator"),
                         player
                 ).forEach(player::sendMessage);
+
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerSupportCreatorEvent());
                 return;
             }
         }
@@ -114,6 +117,8 @@ public final class PluginCommand extends CommandBase {
 
             storage.setSupporter(forceSupporter.getId(), forceSupporter);
             storage.setCreator(creator.getId(), creator);
+
+            Bukkit.getServer().getPluginManager().callEvent(new PlayerSupportCreatorEvent());
         }
     }
 
