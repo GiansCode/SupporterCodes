@@ -61,7 +61,7 @@ final class Placeholders extends PlaceholderExpansion {
             case "currently_supporting":
                 return supportedCreator == null ? "None" : supportedCreator.getName();
             case "supporting_since":
-                return supportedCreator == null ? "None" : supporter.getSupportingSince().toString();
+                return supportedCreator == null ? "None" : new Date(supporter.getSupportingSince()).toString();
         }
 
         return null;
@@ -70,7 +70,7 @@ final class Placeholders extends PlaceholderExpansion {
     private long getMonthlySupporters(final InformationStorage storage) {
         long result = 0;
         for (final Supporter supporter : storage.getSupporters().values()) {
-            if (supporter.getSupportingSince().getMonth() == CURRENT_MONTH) {
+            if (new Date(supporter.getSupportingSince()).getMonth() == CURRENT_MONTH) {
                 result += 1;
             }
         }
