@@ -1,0 +1,2 @@
+database:
+  saveDelay: 600 # In Seconds
