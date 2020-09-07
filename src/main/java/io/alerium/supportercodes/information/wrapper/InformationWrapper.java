@@ -1,4 +1,4 @@
-package io.alerium.supportercodes.information;
+package io.alerium.supportercodes.information.wrapper;
 
 import io.alerium.supportercodes.database.Connection;
 
@@ -12,4 +12,5 @@ public interface InformationWrapper {
 
     void queryData(final Connection connection) throws SQLException;
 
+    void removeData(final Connection connection) throws SQLException;
 }

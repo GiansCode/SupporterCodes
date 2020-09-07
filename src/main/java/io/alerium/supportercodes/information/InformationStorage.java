@@ -3,6 +3,9 @@ package io.alerium.supportercodes.information;
 import io.alerium.supportercodes.Identifier;
 import io.alerium.supportercodes.SupporterCodesPlugin;
 import io.alerium.supportercodes.database.Connection;
+import io.alerium.supportercodes.information.wrapper.CreatorWrapper;
+import io.alerium.supportercodes.information.wrapper.InformationWrapper;
+import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,8 +17,10 @@ import java.util.concurrent.CompletableFuture;
 
 public final class InformationStorage {
 
+    private final InformationHandler informationHandler = new InformationHandler(this);
+
     private final Map<UUID, InformationWrapper> information = new HashMap<>();
-    private final List<CreatorWrapper> informationRemoval = new ArrayList<>();
+    private final Set<InformationWrapper> informationRemoval = new HashSet<>();
 
     private final SupporterCodesPlugin plugin;
     private final Connection connection;
@@ -108,6 +113,12 @@ public final class InformationStorage {
         final java.sql.Connection conn = connection.getConnection();
 
         try {
+            for (final InformationWrapper removal : informationRemoval) {
+                removal.removeData(connection);
+            }
+
+            informationRemoval.clear();
+
             for (final UUID identifier : information.keySet()) {
                 information.get(identifier).queryData(connection);
             }
@@ -119,11 +130,23 @@ public final class InformationStorage {
 
     }
 
-    public void setInformationData(final UUID identifier, final InformationWrapper object) {
+    public InformationHandler getInformationHandler() {
+        return this.informationHandler;
+    }
+
+    public Set<InformationWrapper> getInformationRemoval() {
+        return this.informationRemoval;
+    }
+
+    void setInformationData(final UUID identifier, final InformationWrapper object) {
         this.information.put(identifier, object);
     }
 
-    public InformationWrapper getInformationData(final UUID identifier) {
+    void removeInformationData(final UUID identifier) {
+        this.information.remove(identifier);
+    }
+
+    InformationWrapper getInformationData(final UUID identifier) {
         return this.information.get(identifier);
     }
 }

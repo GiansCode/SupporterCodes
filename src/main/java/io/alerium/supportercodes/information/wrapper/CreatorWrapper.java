@@ -1,4 +1,4 @@
-package io.alerium.supportercodes.information;
+package io.alerium.supportercodes.information.wrapper;
 
 import io.alerium.supportercodes.Identifier;
 import io.alerium.supportercodes.database.Connection;
@@ -50,6 +50,18 @@ public final class CreatorWrapper implements InformationWrapper {
                         ") ON DUPLICATE KEY UPDATE supporters=%d, support_code_uses=%d;",
                         connection.getDatabaseName(), Identifier.CREATOR_TABLE, userID, supporters, supportCodeUses,
                         supporters, supportCodeUses
+                )
+        ).executeUpdate();
+    }
+
+    @Override
+    public void removeData(final Connection connection) throws SQLException {
+        final java.sql.Connection conn = connection.getConnection();
+
+        conn.prepareStatement(
+                String.format(
+                        "DELETE FROM %s.%s WHERE uuid='%s';",
+                        connection.getDatabaseName(), Identifier.CREATOR_TABLE, userID
                 )
         ).executeUpdate();
     }

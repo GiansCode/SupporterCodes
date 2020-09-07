@@ -1,4 +1,4 @@
-package io.alerium.supportercodes.information;
+package io.alerium.supportercodes.information.wrapper;
 
 import io.alerium.supportercodes.Identifier;
 import io.alerium.supportercodes.database.Connection;
@@ -11,7 +11,7 @@ public final class SupporterWrapper implements InformationWrapper {
 
     private final UUID userID;
 
-    private String supportedCreatorID = "";
+    private String supportedCreatorID = "none";
     private long supporterSince = 0;
 
     public SupporterWrapper(final OfflinePlayer player) {
@@ -50,6 +50,18 @@ public final class SupporterWrapper implements InformationWrapper {
                         ") ON DUPLICATE KEY UPDATE supported_creator='%s', supporter_since=%d;",
                         connection.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID, supportedCreatorID, supporterSince,
                         supportedCreatorID, supporterSince
+                )
+        ).executeUpdate();
+    }
+
+    @Override
+    public void removeData(final Connection connection) throws SQLException {
+        final java.sql.Connection conn = connection.getConnection();
+
+        conn.prepareStatement(
+                String.format(
+                        "DELETE FROM %s.%s WHERE uuid='%s';",
+                        connection.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID
                 )
         ).executeUpdate();
     }
