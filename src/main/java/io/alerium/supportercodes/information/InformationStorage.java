@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 public final class InformationStorage {
 
@@ -86,6 +87,7 @@ public final class InformationStorage {
                     information.put(supporterUUID, wrapper);
                 }
 
+                conn.close();
             } catch (final SQLException ex) {
                 ex.printStackTrace();
             }
@@ -104,7 +106,7 @@ public final class InformationStorage {
             @Override
             public void run() {
                 CompletableFuture.supplyAsync(() -> {
-                    saveData();
+                    saveData(false);
                     return null;
                 }).exceptionally(ex -> {
                     ex.printStackTrace();
@@ -114,8 +116,13 @@ public final class InformationStorage {
         }.runTaskTimer(plugin, saveDelay, saveDelay);
     }
 
-    public void saveData() {
+    public void saveData(final boolean close) {
         final java.sql.Connection conn = connectionProvider.getConnection();
+
+        if (conn == null) {
+            plugin.getLogger().log(Level.WARNING, "Tried saving data, but database connection was unreachable!");
+            return;
+        }
 
         try {
             for (final InformationWrapper removal : informationRemoval) {
@@ -132,7 +139,6 @@ public final class InformationStorage {
         } catch (final SQLException ex) {
             ex.printStackTrace();
         }
-
     }
 
     public InformationHandler getInformationHandler() {

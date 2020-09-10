@@ -1,62 +1,81 @@
 database:
-  saveDelay: 600 # In Seconds
+  saveDelay: 60 #1200 # In Seconds
 
 messages:
-  user-is-a-creator:
-    - '&8>.._'
-    - '  &cYou are a creator, and cannot support anyone!'
-    - '&r'
-  user-is-supporting-creator:
-    - '&8>.._'
-    - '  &bYou are supporting Creator &f%supportercodes_currently_supporting%&b!'
-    - '&r'
-  user-is-not-supporting-a-creator:
-    - '&8>.._'
-    - '  &bYou are not supporting any creators right now! If you wish to learn how,'
-    - '  &bvisit &f&nwikihow/how-to-support-a-creator&b!'
-    - '&r'
-  user-stopped-supporting-creator:
-    - '&8>.._'
-    - '  &cYou have stopped supporting &f%supportercodes_currently_supporting%&c!'
-    - '&r'
-  invalid-creator:
-    - '&8>.._'
-    - '  &cSpecified creator does not exist&7!&c, &7Please use &f/support list&7,'
-    - '  &7if you wish to see all available creators!'
-    - '&r'
-  invalid-force-player:
-    - '&8>.._'
-    - '  &cSpecified force player does not exist! Please verify the username is correct.'
-    - '&r'
-  creator-force-creator:
-    - '&8>.._'
-    - '  &cCannot force a creator to support a creator!'
-    - '&r'
-  missing-permission:
-    - '&8>.._'
-    - '  &cYou do not have permission to execute this command!'
-    - '&r'
-  reloaded-plugin:
-    - '&8>.._'
-    - '  &aSuccessfully reloaded plugin and configuration files!'
-    - '&r'
-  non-console-command:
-    - '&8>.._'
-    - '  &cThis command cannot be executed through console!'
-    - '&r'
-  non-existent-command:
-    - '&8>.._'
-    - '  &cThis command does not exist!'
-    - '&r'
-  user-wrapper-already-exists:
-    - '&8>.._'
-    - '  &cAn InformationWrapper for specified user already exists!'
-    - '&r'
-  added-a-creator:
-    - '&8>.._'
-    - '  &aSuccessfully added &f{target} &ato the Creator list!'
-    - '&r'
-  removed-creator:
-    - '&8>.._'
-    - '  &aSuccessfully removed &f{target} &afrom the Creator list!'
-    - '&r'
+  user-is-a-creator: [
+    '&8>.._',
+    '  &cYou are a creator, and cannot support anyone!',
+    '&r'
+  ]
+  user-is-supporting-creator: [
+    '&8>.._',
+    '  &bYou are supporting Creator &f%supportercodes_currently_supporting%&b!',
+    '&r'
+  ]
+  user-is-not-supporting-a-creator: [
+    '&8>.._',
+    '  &bYou are not supporting any creators right now! If you wish to learn how,',
+    '  &bvisit &f&nwikihow/how-to-support-a-creator&b!',
+    '&r'
+  ]
+  user-stopped-supporting-creator: [
+    '&8>.._',
+    '  &cYou have stopped supporting &f%supportercodes_currently_supporting%&c!',
+    '&r'
+  ]
+  invalid-creator: [
+    '&8>.._',
+    '  &cSpecified creator does not exist&7!&c, &7Please use &f/support list&7,',
+    '  &7if you wish to see all available creators!',
+    '&r'
+  ]
+  invalid-force-player: [
+    '&8>.._',
+    '  &cSpecified force player does not exist! Please verify the username is correct.',
+    '&r'
+  ]
+  creator-force-creator: [
+    '&8>.._',
+    '  &cCannot force a creator to support a creator!',
+    '&r'
+  ]
+  missing-permission: [
+    '&8>.._',
+    '  &cYou do not have permission to execute this command!',
+    '&r'
+  ]
+  reloaded-plugin: [
+    '&8>.._',
+    '  &aSuccessfully reloaded plugin and configuration files!',
+    '&r'
+  ]
+  non-console-command: [
+    '&8>.._',
+    '  &cThis command cannot be executed through console!',
+    '&r'
+  ]
+  non-existent-command: [
+    '&8>.._',
+    '  &cThis command does not exist!',
+    '&r'
+  ]
+  wrong-command-usage: [
+    '&8>.._',
+    '  &cInvalid usage for specified command!',
+    '&r'
+  ]
+  user-wrapper-already-exists: [
+    '&8>.._',
+    '  &cAn InformationWrapper for specified user already exists!',
+    '&r'
+  ]
+  added-a-creator: [
+    '&8>.._',
+    '  &aSuccessfully added &f{target} &ato the Creator list!',
+    '&r'
+  ]
+  removed-creator: [
+    '&8>.._',
+    '  &aSuccessfully removed &f{target} &afrom the Creator list!',
+    '&r'
+  ]

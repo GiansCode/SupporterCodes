@@ -56,7 +56,7 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     public void onDisable() {
         reloadConfig();
 
-        informationStorage.saveData();
+        informationStorage.saveData(true);
     }
 
     public InformationHandler getInformationHandler() {

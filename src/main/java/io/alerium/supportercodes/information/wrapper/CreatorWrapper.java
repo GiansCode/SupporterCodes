@@ -51,6 +51,8 @@ public final class CreatorWrapper implements InformationWrapper {
                         supporters, supportCodeUses
                 )
         ).executeUpdate();
+
+        conn.close();
     }
 
     @Override
@@ -63,6 +65,8 @@ public final class CreatorWrapper implements InformationWrapper {
                         connectionProvider.getDatabaseName(), Identifier.CREATOR_TABLE, userID
                 )
         ).executeUpdate();
+
+        conn.close();
     }
 
 }

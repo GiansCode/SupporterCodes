@@ -52,6 +52,8 @@ public final class SupporterWrapper implements InformationWrapper {
                         supportedCreatorID, supporterSince
                 )
         ).executeUpdate();
+
+        conn.close();
     }
 
     @Override
@@ -64,6 +66,8 @@ public final class SupporterWrapper implements InformationWrapper {
                         connectionProvider.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID
                 )
         ).executeUpdate();
+
+        conn.close();
     }
 
 }

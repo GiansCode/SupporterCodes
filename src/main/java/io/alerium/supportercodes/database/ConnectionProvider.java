@@ -28,10 +28,6 @@ public final class ConnectionProvider extends DatabaseFactory {
             ex.printStackTrace();
         }
 
-        if (connection == null) {
-            throw new RuntimeException("Database connection is null!");
-        }
-
         return connection;
     }
 
