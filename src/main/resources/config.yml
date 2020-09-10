@@ -48,3 +48,15 @@ messages:
     - '&8>.._'
     - '  &cThis command does not exist!'
     - '&r'
+  user-wrapper-already-exists:
+    - '&8>.._'
+    - '  &cAn InformationWrapper for specified user already exists!'
+    - '&r'
+  added-a-creator:
+    - '&8>.._'
+    - '  &aSuccessfully added &f{target} &ato the Creator list!'
+    - '&r'
+  removed-creator:
+    - '&8>.._'
+    - '  &aSuccessfully removed &f{target} &afrom the Creator list!'
+    - '&r'

@@ -15,6 +15,9 @@ public final class Identifier {
     public static final String CLEAR_SUB_COMMAND = "clear";
     public static final String HANDLE_SUB_COMMAND = "handle";
     public static final String RELOAD_SUB_COMMAND = "reload";
+    public static final String CREATOR_MANAGE_COMMAND = "creator";
+    public static final String CREATOR_ADD_COMMAND = "add";
+    public static final String CREATOR_REMOVE_COMMAND = "remove";
 
     // Command Permissions
     public static final String BASE_PERMISSION = "supportercodes.command.main";
@@ -23,6 +26,8 @@ public final class Identifier {
     public static final String SUPPORT_PERMISSION = "supportercodes.command.support";
     public static final String SUPPORT_FORCE_PERMISSION = "supportercodes.command.support.force";
     public static final String RELOAD_PERMISSION = "supportercodes.command.reload";
+    public static final String CREATOR_ADD_PERMISSION = "supportercodes.command.manage.add";
+    public static final String CREATOR_REMOVE_PERMISSION = "supportercodes.command.manage.remove";
 
     // Message Paths
     public static final String USER_IS_A_CREATOR = "user-is-a-creator";
@@ -32,6 +37,9 @@ public final class Identifier {
     public static final String INVALID_CREATOR = "invalid-creator";
     public static final String INVALID_FORCE_PLAYER = "invalid-force-player";
     public static final String CREATOR_FORCE_CREATOR = "creator-force-creator";
+    public static final String ALREADY_EXISTENT_WRAPPER = "user-wrapper-already-exists";
+    public static final String ADDED_A_CREATOR = "added-a-creator";
+    public static final String REMOVED_CREATOR = "removed-creator";
 
     public static final String RELOAD_PLUGIN = "reloaded-plugin";
 

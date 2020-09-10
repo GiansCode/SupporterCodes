@@ -1,7 +1,8 @@
 package io.alerium.supportercodes.information.wrapper;
 
 import io.alerium.supportercodes.Identifier;
-import io.alerium.supportercodes.database.Connection;
+import io.alerium.supportercodes.database.ConnectionProvider;
+import io.alerium.supportercodes.util.Statement;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
@@ -18,20 +19,20 @@ public final class SupporterWrapper implements InformationWrapper {
         this.userID = player.getUniqueId();
     }
 
-    public void setSupportedCreatorID(final String value) {
-        this.supportedCreatorID = value;
-    }
-
-    public void setSupporterSince(final long value) {
-        this.supporterSince = value;
-    }
-
     public String getSupportedCreatorID() {
         return this.supportedCreatorID;
     }
 
+    public void setSupportedCreatorID(final String value) {
+        this.supportedCreatorID = value;
+    }
+
     public long getSupporterSince() {
         return this.supporterSince;
+    }
+
+    public void setSupporterSince(final long value) {
+        this.supporterSince = value;
     }
 
     @Override
@@ -40,28 +41,27 @@ public final class SupporterWrapper implements InformationWrapper {
     }
 
     @Override
-    public void queryData(final Connection connection) throws SQLException {
-        final java.sql.Connection conn = connection.getConnection();
+    public void queryData(final ConnectionProvider connectionProvider) throws SQLException {
+        final java.sql.Connection conn = connectionProvider.getConnection();
 
         conn.prepareStatement(
                 String.format(
-                        "INSERT INTO %s.%s (uuid, supported_creator, supporter_since) VALUES (" +
-                                "'%s', '%s', %d" +
-                        ") ON DUPLICATE KEY UPDATE supported_creator='%s', supporter_since=%d;",
-                        connection.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID, supportedCreatorID, supporterSince,
+                        Statement.UPDATE_SUPPORTER_UUID_DATA,
+                        connectionProvider.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID,
+                        supportedCreatorID.equalsIgnoreCase("none") ? null : supportedCreatorID, supporterSince,
                         supportedCreatorID, supporterSince
                 )
         ).executeUpdate();
     }
 
     @Override
-    public void removeData(final Connection connection) throws SQLException {
-        final java.sql.Connection conn = connection.getConnection();
+    public void removeData(final ConnectionProvider connectionProvider) throws SQLException {
+        final java.sql.Connection conn = connectionProvider.getConnection();
 
         conn.prepareStatement(
                 String.format(
-                        "DELETE FROM %s.%s WHERE uuid='%s';",
-                        connection.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID
+                        Statement.DELETE_UUID_DATA,
+                        connectionProvider.getDatabaseName(), Identifier.SUPPORTER_TABLE, userID
                 )
         ).executeUpdate();
     }

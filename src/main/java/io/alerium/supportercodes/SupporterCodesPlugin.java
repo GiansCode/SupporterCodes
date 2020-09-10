@@ -4,6 +4,7 @@ import io.alerium.supportercodes.command.SupportCommand;
 import io.alerium.supportercodes.command.SupportHandle;
 import io.alerium.supportercodes.command.SupportStop;
 import io.alerium.supportercodes.command.admin.PluginReload;
+import io.alerium.supportercodes.command.admin.SupportCreatorManage;
 import io.alerium.supportercodes.information.InformationHandler;
 import io.alerium.supportercodes.information.InformationStorage;
 import io.alerium.supportercodes.listener.PlayerJoinListener;
@@ -13,6 +14,7 @@ import me.mattstudios.mf.base.CommandManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Arrays;
 
 public final class SupporterCodesPlugin extends JavaPlugin {
@@ -26,19 +28,23 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        saveResource("hikari.properties", false);
+        if (!new File(getDataFolder() + "/hikari.properties").exists()) {
+            saveResource("hikari.properties", false);
+        }
+
+        this.commandManager = new CommandManager(this);
 
         messageStorage.load(this);
 
         informationStorage.initialize();
 
-        commandManager = new CommandManager(this);
         registerCommands(
                 commandManager,
                 new SupportCommand(this),
                 new SupportHandle(this),
                 new SupportStop(this),
-                new PluginReload(this)
+                new PluginReload(this),
+                new SupportCreatorManage(this)
         );
 
         registerListeners(

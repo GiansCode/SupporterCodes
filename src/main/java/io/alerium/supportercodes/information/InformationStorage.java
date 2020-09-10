@@ -2,10 +2,11 @@ package io.alerium.supportercodes.information;
 
 import io.alerium.supportercodes.Identifier;
 import io.alerium.supportercodes.SupporterCodesPlugin;
-import io.alerium.supportercodes.database.Connection;
+import io.alerium.supportercodes.database.ConnectionProvider;
 import io.alerium.supportercodes.information.wrapper.CreatorWrapper;
 import io.alerium.supportercodes.information.wrapper.InformationWrapper;
 import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
+import io.alerium.supportercodes.util.Statement;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,26 +24,29 @@ public final class InformationStorage {
     private final Set<InformationWrapper> informationRemoval = new HashSet<>();
 
     private final SupporterCodesPlugin plugin;
-    private final Connection connection;
     private final long saveDelay;
+    private ConnectionProvider connectionProvider;
 
     public InformationStorage(final SupporterCodesPlugin plugin) {
-        this.connection = new Connection(plugin);
         this.plugin = plugin;
 
         this.saveDelay = plugin.getConfig().getLong(Identifier.SAVE_DELAY_PATH);
     }
 
     public void initialize() {
+        this.connectionProvider = new ConnectionProvider(plugin);
+
+        this.connectionProvider.setupDatabase();
+
         CompletableFuture.supplyAsync(() -> {
 
-            final java.sql.Connection conn = connection.getConnection();
-            final String databaseName = connection.getDatabaseName();
+            final java.sql.Connection conn = connectionProvider.getConnection();
+            final String databaseName = connectionProvider.getDatabaseName();
 
             try {
                 final ResultSet creatorResult = conn.prepareStatement(
                         String.format(
-                                "SELECT * FROM %s.%s;",
+                                Statement.SELECT_ALL_FROM_TABLE,
                                 databaseName, Identifier.CREATOR_TABLE
                         )
                 ).executeQuery();
@@ -63,7 +67,7 @@ public final class InformationStorage {
 
                 final ResultSet supporterResult = conn.prepareStatement(
                         String.format(
-                                "SELECT * FROM %s.%s;",
+                                Statement.SELECT_ALL_FROM_TABLE,
                                 databaseName, Identifier.SUPPORTER_TABLE
                         )
                 ).executeQuery();
@@ -76,11 +80,12 @@ public final class InformationStorage {
                     final OfflinePlayer player = Bukkit.getOfflinePlayer(supporterUUID);
                     final SupporterWrapper wrapper = new SupporterWrapper(player);
 
-                    wrapper.setSupportedCreatorID(supportedCreatorUUID);
+                    wrapper.setSupportedCreatorID(supportedCreatorUUID == null ? "none" : supportedCreatorUUID);
                     wrapper.setSupporterSince(supporterSince);
 
                     information.put(supporterUUID, wrapper);
                 }
+
             } catch (final SQLException ex) {
                 ex.printStackTrace();
             }
@@ -110,17 +115,17 @@ public final class InformationStorage {
     }
 
     public void saveData() {
-        final java.sql.Connection conn = connection.getConnection();
+        final java.sql.Connection conn = connectionProvider.getConnection();
 
         try {
             for (final InformationWrapper removal : informationRemoval) {
-                removal.removeData(connection);
+                removal.removeData(connectionProvider);
             }
 
             informationRemoval.clear();
 
             for (final UUID identifier : information.keySet()) {
-                information.get(identifier).queryData(connection);
+                information.get(identifier).queryData(connectionProvider);
             }
 
             conn.close();
@@ -134,7 +139,7 @@ public final class InformationStorage {
         return this.informationHandler;
     }
 
-    public Set<InformationWrapper> getInformationRemoval() {
+    Set<InformationWrapper> getInformationRemoval() {
         return this.informationRemoval;
     }
 
