@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public final class Color {
 
-    private static String colorize(final String message, final Player player) {
+    public static String colorize(final String message, final Player player) {
         return ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, message));
     }
 

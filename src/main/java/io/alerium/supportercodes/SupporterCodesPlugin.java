@@ -2,6 +2,7 @@ package io.alerium.supportercodes;
 
 import io.alerium.supportercodes.command.SupportCommand;
 import io.alerium.supportercodes.command.SupportHandle;
+import io.alerium.supportercodes.command.SupportList;
 import io.alerium.supportercodes.command.SupportStop;
 import io.alerium.supportercodes.command.admin.PluginReload;
 import io.alerium.supportercodes.command.admin.SupportCreatorManage;
@@ -28,9 +29,10 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        if (!new File(getDataFolder() + "/hikari.properties").exists()) {
-            saveResource("hikari.properties", false);
-        }
+        saveFiles(
+                "hikari.properties",
+                "creator_menu.yml"
+        );
 
         this.commandManager = new CommandManager(this);
 
@@ -44,7 +46,8 @@ public final class SupporterCodesPlugin extends JavaPlugin {
                 new SupportHandle(this),
                 new SupportStop(this),
                 new PluginReload(this),
-                new SupportCreatorManage(this)
+                new SupportCreatorManage(this),
+                new SupportList(this)
         );
 
         registerListeners(
@@ -77,5 +80,13 @@ public final class SupporterCodesPlugin extends JavaPlugin {
 
     private void registerCommands(final CommandManager manager, final CommandBase... commands) {
         Arrays.stream(commands).forEach(manager::register);
+    }
+
+    private void saveFiles(final String... files) {
+        Arrays.stream(files).forEach(file -> {
+            if (!new File(getDataFolder() + "/" + file).exists()) {
+                saveResource(file, false);
+            }
+        });
     }
 }

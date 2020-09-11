@@ -4,7 +4,7 @@ import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class PlayerSupportCreatorEvent extends Event {
+public final class PlayerSupportCreatorEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final SupporterWrapper supporterWrapper;

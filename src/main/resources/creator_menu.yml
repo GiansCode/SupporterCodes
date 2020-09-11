@@ -1,0 +1,39 @@
+page-rows: 3
+page-size: 14
+page-title: '&8> Support Creators'
+creator-display:
+  material: SKULL_ITEM
+  data: 3
+  amount: 1
+  display: '&b&lCreator&8: &f{creator-name}'
+  lore:
+    - ''
+    - '&7&o"If you wish to support this creator,'
+    - '&7&oclick on their head"'
+    - ''
+    - ' &f{creator-name} &7has &f%supportercodes_supporters_all_{creator-name}% &7supporters.'
+    - ''
+items:
+  previous-page:
+    material: ARROW
+    data: 0
+    amount: 1
+    display: '&bPrevious Page &8(&7Click&8)'
+    lore: []
+    slots: [20]
+    action: PREVIOUS
+  next-page:
+    material: ARROW
+    data: 0
+    amount: 1
+    display: '&bNext Page &8(&7Click&8)'
+    lore: []
+    slots: [23]
+    action: NEXT
+  filler:
+    material: STAINED_GLASS_PANE
+    data: 7
+    amount: 1
+    display: ' '
+    lore: []
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 21, 22, 24, 25, 26]

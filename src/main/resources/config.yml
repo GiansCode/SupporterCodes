@@ -79,3 +79,8 @@ messages:
     '  &aSuccessfully removed &f{target} &afrom the Creator list!',
     '&r'
   ]
+  user-started-supporting-creator: [
+    '&8>.._',
+    '  &aYou have started supporting &f{creator-name}&a!',
+    '&r'
+  ]

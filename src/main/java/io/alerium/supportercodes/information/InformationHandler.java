@@ -4,6 +4,8 @@ import io.alerium.supportercodes.information.wrapper.CreatorWrapper;
 import io.alerium.supportercodes.information.wrapper.InformationWrapper;
 import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public final class InformationHandler {
@@ -35,6 +37,12 @@ public final class InformationHandler {
         final SupporterWrapper wrapper = (SupporterWrapper) getWrapper(uuid);
 
         return !wrapper.getSupportedCreatorID().equalsIgnoreCase("none");
+    }
+
+    public boolean isSupportingCreator(final UUID userID, final UUID creatorID) {
+        final SupporterWrapper wrapper = (SupporterWrapper) getWrapper(userID);
+
+        return wrapper.getSupportedCreatorID().equalsIgnoreCase(creatorID.toString());
     }
 
     public boolean isCreator(final UUID uuid) {
@@ -72,5 +80,20 @@ public final class InformationHandler {
         creatorWrapper.setSupportCodeUses(+1);
 
         this.storage.setInformationData(creatorWrapper.getUserID(), creatorWrapper);
+    }
+
+    public List<CreatorWrapper> getCreatorWrappers() {
+        final List<CreatorWrapper> wrappers = new ArrayList<>();
+
+        for (final UUID identifier : storage.getInformation().keySet()) {
+            final InformationWrapper wrapper = getWrapper(identifier);
+            if (!(wrapper instanceof CreatorWrapper)) {
+                continue;
+            }
+
+            wrappers.add((CreatorWrapper) wrapper);
+        }
+
+        return wrappers;
     }
 }

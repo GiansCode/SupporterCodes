@@ -160,4 +160,8 @@ public final class InformationStorage {
     InformationWrapper getInformationData(final UUID identifier) {
         return this.information.get(identifier);
     }
+
+    public Map<UUID, InformationWrapper> getInformation() {
+        return this.information;
+    }
 }

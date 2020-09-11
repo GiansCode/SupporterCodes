@@ -18,6 +18,7 @@ public final class Identifier {
     public static final String CREATOR_MANAGE_COMMAND = "creator";
     public static final String CREATOR_ADD_COMMAND = "add";
     public static final String CREATOR_REMOVE_COMMAND = "remove";
+    public static final String CREATOR_LIST_COMMAND = "list";
 
     // Command Permissions
     public static final String BASE_PERMISSION = "supportercodes.command.main";
@@ -28,6 +29,7 @@ public final class Identifier {
     public static final String RELOAD_PERMISSION = "supportercodes.command.reload";
     public static final String CREATOR_ADD_PERMISSION = "supportercodes.command.manage.add";
     public static final String CREATOR_REMOVE_PERMISSION = "supportercodes.command.manage.remove";
+    public static final String CREATOR_LIST_PERMISSION = "supportercodes.command.list";
 
     // Message Paths
     public static final String USER_IS_A_CREATOR = "user-is-a-creator";
@@ -40,6 +42,7 @@ public final class Identifier {
     public static final String ALREADY_EXISTENT_WRAPPER = "user-wrapper-already-exists";
     public static final String ADDED_A_CREATOR = "added-a-creator";
     public static final String REMOVED_CREATOR = "removed-creator";
+    public static final String STARTED_SUPPORTING_CREATOR = "user-started-supporting-creator";
 
     public static final String RELOAD_PLUGIN = "reloaded-plugin";
 
@@ -47,5 +50,18 @@ public final class Identifier {
     public static final String NON_CONSOLE_COMMAND = "non-console-command";
     public static final String NON_EXISTENT_COMMAND = "non-existent-command";
     public static final String WRONG_COMMAND_USAGE = "wrong-command-usage";
+
+    // Menu Paths
+    public static final String PAGE_ROWS = "page-rows";
+    public static final String PAGE_SIZE = "page-size";
+    public static final String PAGE_TITLE = "page-title";
+
+    public static final String MATERIAL = "material";
+    public static final String AMOUNT = "amount";
+    public static final String DATA = "data";
+    public static final String DISPLAY_NAME = "display";
+    public static final String LORE = "lore";
+    public static final String ACTION = "action";
+    public static final String SLOTS = "slots";
 
 }
