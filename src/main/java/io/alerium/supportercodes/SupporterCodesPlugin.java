@@ -61,7 +61,7 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     public void onDisable() {
         reloadConfig();
 
-        informationStorage.saveData(true);
+        informationStorage.saveData();
     }
 
     public InformationHandler getInformationHandler() {
@@ -77,7 +77,11 @@ public final class SupporterCodesPlugin extends JavaPlugin {
     }
 
     private void registerListeners(final Listener... listeners) {
-        Arrays.stream(listeners).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+        Arrays.stream(listeners).forEach(listener -> {
+            if (this.isEnabled()) {
+                this.getServer().getPluginManager().registerEvents(listener, this);
+            }
+        });
     }
 
     private void registerCommands(final CommandManager manager, final CommandBase... commands) {

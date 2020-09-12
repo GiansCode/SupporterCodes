@@ -35,14 +35,25 @@ public final class InformationStorage {
     }
 
     public void initialize() {
-        this.connectionProvider = new ConnectionProvider(plugin);
+        try {
+            this.connectionProvider = new ConnectionProvider(plugin);
 
-        this.connectionProvider.setupDatabase();
+            this.connectionProvider.setupDatabase();
+        } catch (final Exception ex) {
+            plugin.getLogger().log(Level.WARNING, "Database connection was null, failed to initialize plugin!");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return;
+        }
 
         CompletableFuture.supplyAsync(() -> {
 
             final java.sql.Connection conn = connectionProvider.getConnection();
             final String databaseName = connectionProvider.getDatabaseName();
+
+            if (conn == null) {
+                plugin.getLogger().log(Level.WARNING, "Database connection was null, failed to save data!");
+                return null;
+            }
 
             try {
                 final ResultSet creatorResult = conn.prepareStatement(
@@ -106,7 +117,7 @@ public final class InformationStorage {
             @Override
             public void run() {
                 CompletableFuture.supplyAsync(() -> {
-                    saveData(false);
+                    saveData();
                     return null;
                 }).exceptionally(ex -> {
                     ex.printStackTrace();
@@ -116,7 +127,12 @@ public final class InformationStorage {
         }.runTaskTimer(plugin, saveDelay, saveDelay);
     }
 
-    public void saveData(final boolean close) {
+    public void saveData() {
+        if (connectionProvider == null) {
+            plugin.getLogger().log(Level.WARNING, "Connection Provider was null, failed to save data!");
+            return;
+        }
+
         final java.sql.Connection conn = connectionProvider.getConnection();
 
         if (conn == null) {

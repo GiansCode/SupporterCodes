@@ -7,6 +7,7 @@ import io.alerium.supportercodes.util.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 
 public final class ConnectionProvider extends DatabaseFactory {
 
@@ -20,12 +21,14 @@ public final class ConnectionProvider extends DatabaseFactory {
 
     @Override
     public java.sql.Connection getConnection() {
-        java.sql.Connection connection = null;
+        java.sql.Connection connection;
 
         try {
             connection = dataSource.getConnection();
         } catch (final SQLException ex) {
-            ex.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Failed to initialize database connection!");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return null;
         }
 
         return connection;
@@ -39,6 +42,11 @@ public final class ConnectionProvider extends DatabaseFactory {
 
     public void setupDatabase() {
         final Connection connection = getConnection();
+
+        if (connection == null) {
+            plugin.getLogger().log(Level.WARNING, "Database connection was null, failed to setup database!");
+            return;
+        }
 
         try {
             /*
