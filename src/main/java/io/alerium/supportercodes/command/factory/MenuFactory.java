@@ -18,14 +18,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
+import java.util.List;
 
 public final class MenuFactory {
 
@@ -72,26 +71,29 @@ public final class MenuFactory {
             final ItemMeta meta = itemStack.getItemMeta();
 
             if (meta != null) {
-                meta.setDisplayName(Color.colorize(Replace.replaceString(
-                        creatorSection.getString(Identifier.DISPLAY_NAME),
-                        "{creator-name}", creatorPlayer.getName()
-                ), player));
+                final String displayName = Color.colorize(creatorSection.getString(Identifier.DISPLAY_NAME), player);
+                meta.setDisplayName(
+                        Replace.replaceString(displayName, "{creator-name}", creatorPlayer.getName())
+                );
 
-                meta.setLore(Color.colorize(Replace.replaceList(
-                        creatorSection.getStringList(Identifier.LORE),
-                        "{creator-name}", creatorPlayer.getName()
-                ), player));
+                final List<String> lore = Color.colorize(creatorSection.getStringList(Identifier.LORE), player);
+                meta.setLore(
+                        Replace.replaceList(lore, "{creator-name}", creatorPlayer.getName())
+                );
 
+                /* Not Applicable to heads apparently :(
                 if (handler.isSupportingCreator(player.getUniqueId(), wrapper.getUserID())) {
-                    meta.addEnchant(Enchantment.DURABILITY, 0, false);
+                    meta.addEnchant(Enchantment.OXYGEN, 1, false);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
+                */
             }
 
             itemStack.setItemMeta(meta);
+
             final SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
 
-            if (skullMeta != null) {
+            if (skullMeta != null && creatorPlayer != null) {
                 skullMeta.setOwner(creatorPlayer.getName());
             }
 
@@ -100,20 +102,20 @@ public final class MenuFactory {
             final SupporterWrapper supporterWrapper = (SupporterWrapper) handler.getWrapper(player.getUniqueId());
             final GuiItem guiItem = new GuiItem(itemStack, event -> {
                 if (!supporterWrapper.getSupportedCreatorID().equalsIgnoreCase("none")) {
-                    Message.send(
-                            player,
-                            message.getMessage(Identifier.USER_IS_SUPPORTING_CREATOR)
-                    );
+                    Message.send(player, Color.colorize(
+                            message.getMessage(Identifier.USER_IS_SUPPORTING_CREATOR),
+                            player
+                    ));
 
                     gui.close(player);
                     return;
                 }
 
-                handler.setUserSupporting(player.getUniqueId(), creatorPlayer.getUniqueId());
-                Message.send(
-                        player,
-                        message.getMessage(Identifier.STARTED_SUPPORTING_CREATOR)
-                );
+                handler.setUserSupporting(player.getUniqueId(), wrapper.getUserID());
+                Message.send(player, Color.colorize(
+                        message.getMessage(Identifier.STARTED_SUPPORTING_CREATOR),
+                        player
+                ));
 
                 gui.close(player);
                 Bukkit.getServer().getPluginManager().callEvent(new PlayerSupportCreatorEvent(supporterWrapper));
@@ -126,11 +128,12 @@ public final class MenuFactory {
     private void generateItems(final PaginatedGui gui) {
         final ConfigurationSection items = config.getConfigurationSection("items");
 
+        ItemStack fillerItem = null;
         for (final String item : items.getKeys(false)) {
             final ConfigurationSection itemSection = items.getConfigurationSection(item);
             if (itemSection == null) continue;
 
-            final ItemStack itemStack = new ItemStack(
+            ItemStack itemStack = new ItemStack(
                     Material.getMaterial(itemSection.getString(Identifier.MATERIAL)),
                     itemSection.getInt(Identifier.AMOUNT),
                     (short) itemSection.getInt(Identifier.DATA)
@@ -154,20 +157,23 @@ public final class MenuFactory {
 
             final String action = itemSection.get(Identifier.ACTION) == null ? "none" : itemSection.getString(Identifier.ACTION);
 
-            boolean load = true;
             switch (action.toUpperCase()) {
+                case "FILLER":
+                    fillerItem = itemStack;
+                    break;
                 case "PREVIOUS":
                     if (gui.getCurrentPageNum() <= gui.getPrevPageNum()) {
-                        load = false;
+                        itemStack = fillerItem;
                     }
                     break;
                 case "NEXT":
                     if (gui.getCurrentPageNum() >= gui.getNextPageNum()) {
-                        load = false;
+                        itemStack = fillerItem;
                     }
                     break;
             }
 
+            if (itemStack == null) continue;
             final GuiItem guiItem = new GuiItem(itemStack, event -> {
                 switch (action.toUpperCase()) {
                     case "PREVIOUS":
@@ -179,7 +185,6 @@ public final class MenuFactory {
                 }
             });
 
-            if (!load) continue;
             gui.setItem(itemSection.getIntegerList(Identifier.SLOTS), guiItem);
         }
     }

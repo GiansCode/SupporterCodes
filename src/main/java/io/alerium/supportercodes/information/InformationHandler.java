@@ -6,6 +6,7 @@ import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public final class InformationHandler {
@@ -39,12 +40,6 @@ public final class InformationHandler {
         return !wrapper.getSupportedCreatorID().equalsIgnoreCase("none");
     }
 
-    public boolean isSupportingCreator(final UUID userID, final UUID creatorID) {
-        final SupporterWrapper wrapper = (SupporterWrapper) getWrapper(userID);
-
-        return wrapper.getSupportedCreatorID().equalsIgnoreCase(creatorID.toString());
-    }
-
     public boolean isCreator(final UUID uuid) {
         return getWrapper(uuid) instanceof CreatorWrapper;
     }
@@ -54,6 +49,7 @@ public final class InformationHandler {
         final CreatorWrapper creatorWrapper = (CreatorWrapper) getWrapper(UUID.fromString(wrapper.getSupportedCreatorID()));
 
         wrapper.setSupportedCreatorID("none");
+        wrapper.setSupporterSince(0);
         creatorWrapper.setSupporters(-1);
 
         this.storage.setInformationData(uuid, wrapper);
@@ -74,8 +70,8 @@ public final class InformationHandler {
     }
 
     public void handleSupportCodeUses(final UUID uuid) {
-        final SupporterWrapper wrapper = (SupporterWrapper) getWrapper(uuid);
-        final CreatorWrapper creatorWrapper = (CreatorWrapper) getWrapper(UUID.fromString(wrapper.getSupportedCreatorID()));
+        final SupporterWrapper supporterWrapper = (SupporterWrapper) getWrapper(uuid);
+        final CreatorWrapper creatorWrapper = (CreatorWrapper) getWrapper(UUID.fromString(supporterWrapper.getSupportedCreatorID()));
 
         creatorWrapper.setSupportCodeUses(+1);
 
@@ -85,7 +81,7 @@ public final class InformationHandler {
     public List<CreatorWrapper> getCreatorWrappers() {
         final List<CreatorWrapper> wrappers = new ArrayList<>();
 
-        for (final UUID identifier : storage.getInformation().keySet()) {
+        for (final UUID identifier : this.storage.getInformation().keySet()) {
             final InformationWrapper wrapper = getWrapper(identifier);
             if (!(wrapper instanceof CreatorWrapper)) {
                 continue;
@@ -95,5 +91,9 @@ public final class InformationHandler {
         }
 
         return wrappers;
+    }
+
+    public Map<UUID, InformationWrapper> getWrappers() {
+        return this.storage.getInformation();
     }
 }

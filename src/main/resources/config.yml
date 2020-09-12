@@ -81,6 +81,6 @@ messages:
   ]
   user-started-supporting-creator: [
     '&8>.._',
-    '  &aYou have started supporting &f{creator-name}&a!',
+    '  &aYou have started supporting &f%supportercodes_currently_supporting%&a!',
     '&r'
   ]

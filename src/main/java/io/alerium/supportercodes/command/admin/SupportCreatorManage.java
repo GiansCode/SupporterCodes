@@ -27,7 +27,7 @@ public final class SupportCreatorManage extends CommandBase {
 
     @SubCommand(Identifier.CREATOR_MANAGE_COMMAND)
     public void onCommand(final CommandSender sender, final String[] arguments) {
-        if (arguments.length != 2) {
+        if (arguments.length != 3) {
             Message.send(sender, Color.colorize(
                     message.getMessage(Identifier.WRONG_COMMAND_USAGE),
                     sender
@@ -35,21 +35,21 @@ public final class SupportCreatorManage extends CommandBase {
             return;
         }
 
-        final String argument = arguments[0];
+        final String argument = arguments[1];
         switch (argument.toLowerCase()) {
             case Identifier.CREATOR_ADD_COMMAND:
                 if (!sender.hasPermission(Identifier.CREATOR_ADD_PERMISSION)) {
                     break;
                 }
 
-                this.addCreator.onCommand(sender, arguments[1]);
+                this.addCreator.onCommand(sender, arguments[2]);
                 return;
             case Identifier.CREATOR_REMOVE_COMMAND:
                 if (!sender.hasPermission(Identifier.CREATOR_REMOVE_PERMISSION)) {
                     break;
                 }
 
-                this.removeCreator.onCommand(sender, arguments[1]);
+                this.removeCreator.onCommand(sender, arguments[2]);
                 return;
         }
 

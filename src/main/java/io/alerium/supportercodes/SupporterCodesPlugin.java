@@ -53,6 +53,8 @@ public final class SupporterCodesPlugin extends JavaPlugin {
         registerListeners(
                 new PlayerJoinListener(this)
         );
+
+        new Placeholder(this).register();
     }
 
     @Override

@@ -13,8 +13,8 @@ import me.mattstudios.mf.annotations.Permission;
 import me.mattstudios.mf.annotations.SubCommand;
 import me.mattstudios.mf.base.CommandBase;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -31,8 +31,17 @@ public final class SupportHandle extends CommandBase {
 
     @SubCommand(Identifier.HANDLE_SUB_COMMAND)
     @Permission(Identifier.HANDLE_PERMISSION)
-    public void onCommand(final CommandSender sender, final Player target) {
-        final UUID targetUUID = target.getUniqueId();
+    public void onCommand(final CommandSender sender, final String target) {
+        final OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(target);
+        final UUID targetUUID = targetPlayer.getUniqueId();
+
+        if (handler.isCreator(targetUUID)) {
+            Message.send(sender, Color.colorize(
+                    message.getMessage(Identifier.USER_IS_A_CREATOR),
+                    sender
+            ));
+            return;
+        }
 
         if (!handler.wrapperExists(targetUUID)) {
             Message.send(sender, Color.colorize(

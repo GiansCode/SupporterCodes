@@ -11,16 +11,25 @@ creator-display:
     - '&7&o"If you wish to support this creator,'
     - '&7&oclick on their head"'
     - ''
-    - ' &f{creator-name} &7has &f%supportercodes_supporters_all_{creator-name}% &7supporters.'
+    - ' &f{creator-name} &7has &f%supportercodes_creator_supporters_all_{creator-name}% &7supporters.'
     - ''
 items:
+  # Make sure filler item is always first in the list so page items can be replaced with it if not applicable!
+  filler:
+    material: STAINED_GLASS_PANE
+    data: 7
+    amount: 1
+    display: ' '
+    lore: []
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 22, 24, 25, 26]
+    action: FILLER
   previous-page:
     material: ARROW
     data: 0
     amount: 1
     display: '&bPrevious Page &8(&7Click&8)'
     lore: []
-    slots: [20]
+    slots: [21]
     action: PREVIOUS
   next-page:
     material: ARROW
@@ -30,10 +39,3 @@ items:
     lore: []
     slots: [23]
     action: NEXT
-  filler:
-    material: STAINED_GLASS_PANE
-    data: 7
-    amount: 1
-    display: ' '
-    lore: []
-    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 21, 22, 24, 25, 26]

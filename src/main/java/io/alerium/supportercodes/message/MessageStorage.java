@@ -18,6 +18,7 @@ public final class MessageStorage {
     public void load(final SupporterCodesPlugin plugin) {
         messages.clear();
 
+        plugin.reloadConfig();
         final FileConfiguration config = plugin.getConfig();
         final ConfigurationSection messageSection = config.getConfigurationSection("messages");
 

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.alerium.supportercodes"
-version = "0.0.1-Alpha"
+version = "1.0.0-Alpha"
 
 repositories {
 	mavenCentral()
