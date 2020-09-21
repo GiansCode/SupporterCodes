@@ -3,7 +3,7 @@ package io.alerium.supportercodes.command.factory;
 import io.alerium.supportercodes.Identifier;
 import io.alerium.supportercodes.SupporterCodesPlugin;
 import io.alerium.supportercodes.information.InformationHandler;
-import io.alerium.supportercodes.information.wrapper.CreatorWrapper;
+import io.alerium.supportercodes.information.wrapper.InformationWrapper;
 import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 import io.alerium.supportercodes.listener.event.PlayerSupportCreatorEvent;
 import io.alerium.supportercodes.message.MessageStorage;
@@ -65,7 +65,7 @@ public final class MenuFactory {
                 (short) creatorSection.getInt(Identifier.DATA)
         );
 
-        for (final CreatorWrapper wrapper : plugin.getInformationHandler().getCreatorWrappers()) {
+        for (final InformationWrapper wrapper : plugin.getInformationHandler().getCreatorWrappers()) {
             final OfflinePlayer creatorPlayer = Bukkit.getOfflinePlayer(wrapper.getUserID());
             final ItemStack itemStack = baseItemStack.clone();
             final ItemMeta meta = itemStack.getItemMeta();

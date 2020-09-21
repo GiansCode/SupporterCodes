@@ -4,10 +4,10 @@ import io.alerium.supportercodes.information.wrapper.CreatorWrapper;
 import io.alerium.supportercodes.information.wrapper.InformationWrapper;
 import io.alerium.supportercodes.information.wrapper.SupporterWrapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public final class InformationHandler {
 
@@ -78,19 +78,11 @@ public final class InformationHandler {
         this.storage.setInformationData(creatorWrapper.getUserID(), creatorWrapper);
     }
 
-    public List<CreatorWrapper> getCreatorWrappers() {
-        final List<CreatorWrapper> wrappers = new ArrayList<>();
-
-        for (final UUID identifier : this.storage.getInformation().keySet()) {
-            final InformationWrapper wrapper = getWrapper(identifier);
-            if (!(wrapper instanceof CreatorWrapper)) {
-                continue;
-            }
-
-            wrappers.add((CreatorWrapper) wrapper);
-        }
-
-        return wrappers;
+    public List<InformationWrapper> getCreatorWrappers() {
+        return storage.getInformation().keySet().stream()
+                .map(this::getWrapper)
+                .filter(CreatorWrapper.class::isInstance)
+                .collect(Collectors.toList());
     }
 
     public Map<UUID, InformationWrapper> getWrappers() {
